@@ -80,7 +80,7 @@ const anchorText = computed(() => data.map(item => `## _anchor_${item.title}`).j
 <hr>
 
 ## 📬 联系方式
-- Github：https://github.com/jgcaul/reinstallxyz
+- Github：https://github.com/jgcaul
 - Gitee：https://gitee.com/
 - Email：demo@example.com
 
