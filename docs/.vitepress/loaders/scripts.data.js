@@ -2,7 +2,7 @@ import { createContentLoader } from 'vitepress'
 
 // ========== 自定义排序配置 ==========
 // 按顺序列出文件名，第一个是最先显示
-const sortOrder = ['mengka', 'bin23456789', '1keydd', 'leitbogioro']
+const sortOrder = ['mengka', 'bin456789', '1keydd', 'leitbogioro']
 // ===================================
 
 export default createContentLoader('scripts/*.md', {
