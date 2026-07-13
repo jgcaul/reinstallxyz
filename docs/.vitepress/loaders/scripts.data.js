@@ -1,32 +1,37 @@
 import { createContentLoader } from 'vitepress'
 
-// 自定义项目展示顺序，前面加数字的文件名需要用引号
-const orderMap = {
-  'mengka': 1,
-  'bin23456789': 2,
-  '1keydd': 0,           
-  'leitbogioro': 3
-}
+// ========== 自定义排序配置 ==========
+// 按顺序列出文件名，第一个是最先显示
+const sortOrder = ['mengka', 'bin23456789', '1keydd', 'leitbogioro']
+// ===================================
 
 export default createContentLoader('scripts/*.md', {
   watch: true,
   render: false,
   includeSrc: false,
   transform(raw) {
-    // 提取文件名（不含扩展名）作为排序key
+    // 提取文件名（不含扩展名）
     const getFileKey = (url) => url.split('/').pop().replace('.md', '')
     
-    return raw
-      .map(item => ({
-        url: item.url,
-        title: item.frontmatter.title,
-        desc: item.frontmatter.desc,
-        repoUrl: item.frontmatter.repoUrl,
-        codeType: item.frontmatter.codeType,
-        codeRaw: item.frontmatter.codeRaw,
-        _fileKey: getFileKey(item.url)
-      }))
-      .sort((a, b) => (orderMap[a._fileKey] ?? 999) - (orderMap[b._fileKey] ?? 999))
-      .map(({ _fileKey, ...item }) => item) // 移除临时字段
+    // 添加排序索引
+    const itemsWithOrder = raw.map(item => ({
+      url: item.url,
+      title: item.frontmatter.title,
+      desc: item.frontmatter.desc,
+      repoUrl: item.frontmatter.repoUrl,
+      codeType: item.frontmatter.codeType,
+      codeRaw: item.frontmatter.codeRaw,
+      _fileKey: getFileKey(item.url),
+      _orderIndex: sortOrder.indexOf(getFileKey(item.url))
+    }))
+    
+    // 按 sortOrder 排序
+    return itemsWithOrder
+      .sort((a, b) => {
+        const aIndex = a._orderIndex === -1 ? 999 : a._orderIndex
+        const bIndex = b._orderIndex === -1 ? 999 : b._orderIndex
+        return aIndex - bIndex
+      })
+      .map(({ _fileKey, _orderIndex, ...item }) => item) // 移除临时字段
   }
 })
